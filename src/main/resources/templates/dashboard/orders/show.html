@@ -1,0 +1,42 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>New Plant</title>
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"></link>
+</head>
+<body>
+
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">Purchase Order</div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-2"><b>Plant Name</b></div>
+                <div class="col-sm-8" th:text="${po.plant.name}"></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2"><b>Start date</b></div>
+                <div class="col-sm-8" th:text="${po.rentalPeriod.startDate}"></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2"><b>End date</b></div>
+                <div class="col-sm-8" th:text="${po.rentalPeriod.endDate}"></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2"><b>Total</b></div>
+                <div id="total-cost" class="col-sm-8" th:text="${po.total}"></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2"><b>Status</b></div>
+                <div class="col-sm-8" th:text="${po.status}"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</body>
+</html>
