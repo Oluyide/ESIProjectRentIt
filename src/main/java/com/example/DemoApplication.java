@@ -14,25 +14,26 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
 
 @SpringBootApplication
+@EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
 public class DemoApplication {
 
-//	@Configuration
-//	static class ObjectMapperCustomizer {
-//		@Autowired
-//		@Qualifier("_halObjectMapper")
-//		private ObjectMapper springHateoasObjectMapper;
-//
-//		@Bean(name = "objectMapper")
-//		ObjectMapper objectMapper() {
-//			return springHateoasObjectMapper
-//					.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-//					.configure(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS, false)
-//					.configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false)
-//					.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-//					.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
-//					.registerModules(new JavaTimeModule());
-//		}
-//	}
+	@Configuration
+	static class ObjectMapperCustomizer {
+		@Autowired
+		@Qualifier("_halObjectMapper")
+		private ObjectMapper springHateoasObjectMapper;
+
+		@Bean(name = "objectMapper")
+		ObjectMapper objectMapper() {
+			return springHateoasObjectMapper
+					.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+					.configure(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS, false)
+					.configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false)
+					.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+					.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
+					.registerModules(new JavaTimeModule());
+		}
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);

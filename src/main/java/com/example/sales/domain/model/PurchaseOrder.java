@@ -53,4 +53,6 @@ public class PurchaseOrder {
     public void handleAcceptance() {
         status = POStatus.OPEN;
     }
+
+    public void handleClosing() { status = POStatus.CLOSED; }
 }

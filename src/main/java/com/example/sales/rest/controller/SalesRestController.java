@@ -50,20 +50,20 @@ public class SalesRestController {
         return poDTO;
     }
 
-//    @PatchMapping("/{id}/accept")
-//    public PurchaseOrderDTO acceptPurchaseOrder(@PathVariable String id) throws Exception {
-//        return salesService.acceptPurchaseOrder(id);
-//    }
-//
-//    @DeleteMapping("/{id}/accept")
-//    public PurchaseOrderDTO rejectPurchaseOrder(@PathVariable String id) throws Exception {
-//        return salesService.rejectPurchaseOrder(id);
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public PurchaseOrderDTO closePurchaseOrder(@PathVariable String id) throws Exception {
-//        return salesService.closePurchaseOrder(id);
-//    }
+    @PostMapping("/{id}/accept")
+    public PurchaseOrderDTO acceptPurchaseOrder(@PathVariable String id) throws Exception {
+        return salesService.acceptPurchaseOrder(id);
+    }
+
+    @DeleteMapping("/{id}/accept")
+    public PurchaseOrderDTO rejectPurchaseOrder(@PathVariable String id) throws Exception {
+        return salesService.rejectPurchaseOrder(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public PurchaseOrderDTO closePurchaseOrder(@PathVariable String id) throws Exception {
+        return salesService.closePurchaseOrder(id);
+    }
 
     @ExceptionHandler(PlantNotFoundException.class)
     @ResponseStatus(HttpStatus.PRECONDITION_FAILED)

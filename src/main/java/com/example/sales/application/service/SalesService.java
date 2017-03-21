@@ -79,4 +79,10 @@ public class SalesService {
         po.handleRejection();
         return purchaseOrderAssembler.toResource(purchaseOrderRepository.save(po));
     }
+
+    public PurchaseOrderDTO closePurchaseOrder(String id) {
+        PurchaseOrder po = purchaseOrderRepository.findOne(id);
+        po.handleClosing();
+        return purchaseOrderAssembler.toResource(purchaseOrderRepository.save(po));
+    }
 }
