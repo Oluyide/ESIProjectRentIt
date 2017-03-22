@@ -55,6 +55,11 @@ public class SalesRestController {
         return salesService.acceptPurchaseOrder(id);
     }
 
+    @DeleteMapping("/{id}")
+    public PurchaseOrderDTO closePurchaseOrder(@PathVariable String id) throws Exception{
+        return salesService.closePurchaseOrder(id);
+    }
+
     @DeleteMapping("/{id}/accept")
     public PurchaseOrderDTO rejectPurchaseOrder(@PathVariable String id) throws Exception {
         return salesService.rejectPurchaseOrder(id);
