@@ -1,4 +1,4 @@
-package com.example.remittances;
+package com.example.remittances.application.service;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
@@ -8,7 +8,7 @@ import javax.mail.Multipart;
 import javax.mail.internet.MimeMessage;
 
 @Service
-class RemittanceProcessor {
+class RemittancesProcessor {
 	public String extractRemittance(MimeMessage msg) throws Exception {
 		Multipart multipart = (Multipart) msg.getContent();
 		for (int i = 0; i < multipart.getCount(); i++) {
