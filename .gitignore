@@ -1,5 +1,3 @@
-.mvn
-target
 .gradle
 *.sw?
 .#*
