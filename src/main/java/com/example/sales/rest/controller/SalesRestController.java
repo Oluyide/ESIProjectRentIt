@@ -13,6 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -26,12 +27,14 @@ import static org.springframework.http.HttpMethod.*;
  * Created by lgarcia on 3/10/2017.
  */
 @RestController
+@CrossOrigin
 @RequestMapping("/api/sales/orders")
 public class SalesRestController {
     @Autowired
     SalesService salesService;
 
     @PostMapping
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE", "ROLE_EXTERNAL_USER"})
     public ResponseEntity<PurchaseOrderDTO> createPurchaseOrder(@RequestBody PurchaseOrderDTO poDTO) throws Exception {
         poDTO = salesService.createPurchaseOrder(poDTO);
 
@@ -41,27 +44,32 @@ public class SalesRestController {
     }
 
     @GetMapping
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
     public List<PurchaseOrderDTO> getAllPurchaseOrders() throws Exception {
         return salesService.findAll();
     }
 
     @GetMapping("/{id}")
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE", "ROLE_EXTERNAL_USER"})
     public PurchaseOrderDTO showPurchaseOrder(@PathVariable String id) throws Exception {
         PurchaseOrderDTO poDTO = salesService.findPurchaseOrder(id);
         return poDTO;
     }
 
     @PostMapping("/{id}/accept")
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
     public PurchaseOrderDTO acceptPurchaseOrder(@PathVariable String id) throws Exception {
         return salesService.acceptPurchaseOrder(id);
     }
 
     @DeleteMapping("/{id}")
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE", "ROLE_EXTERNAL_USER"})
     public PurchaseOrderDTO closePurchaseOrder(@PathVariable String id) throws Exception{
         return salesService.closePurchaseOrder(id);
     }
 
     @DeleteMapping("/{id}/accept")
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
     public PurchaseOrderDTO rejectPurchaseOrder(@PathVariable String id) throws Exception {
         return salesService.rejectPurchaseOrder(id);
     }
