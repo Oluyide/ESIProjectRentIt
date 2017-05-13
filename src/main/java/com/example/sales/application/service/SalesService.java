@@ -63,6 +63,29 @@ public class SalesService {
         }
     }
 
+    public PurchaseOrderDTO updatePurchaseOrder(PurchaseOrderDTO purchaseOrderDTO) throws PlantNotFoundException {
+        PurchaseOrder po = purchaseOrderRepository.findOne(purchaseOrderDTO.get_id());
+        BusinessPeriod rentalPeriod = BusinessPeriod.of(purchaseOrderDTO.getRentalPeriod().getStartDate(), purchaseOrderDTO.getRentalPeriod().getEndDate());
+
+        PurchaseOrder newPo = PurchaseOrder.of(
+                po.getId(),
+                po.getPlant(),
+                rentalPeriod
+        );
+
+        try {
+            PlantReservation plantReservation = inventoryService.createPlantReservation(newPo.getPlant(), rentalPeriod);
+            newPo.confirmReservation(plantReservation, newPo.getPlant().getPrice());
+            newPo = purchaseOrderRepository.save(newPo);
+            return purchaseOrderAssembler.toResource(newPo);
+        } catch (PlantNotFoundException e) {
+            newPo.handleRejection();
+            purchaseOrderRepository.save(newPo);
+
+            throw e;
+        }
+    }
+
     public PurchaseOrderDTO findPurchaseOrder(String id) {
         return purchaseOrderAssembler.toResource(purchaseOrderRepository.findOne(id));
     }

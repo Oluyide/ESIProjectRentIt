@@ -49,6 +49,13 @@ public class SalesRestController {
         return salesService.findAll();
     }
 
+    @PatchMapping("/{id}")
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE", "ROLE_EXTERNAL_USER"})
+    public PurchaseOrderDTO updatePurchaseOrder(@PathVariable String id) throws Exception {
+        PurchaseOrderDTO poDTO = salesService.findPurchaseOrder(id);
+        return poDTO;
+    }
+
     @GetMapping("/{id}")
     @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE", "ROLE_EXTERNAL_USER"})
     public PurchaseOrderDTO showPurchaseOrder(@PathVariable String id) throws Exception {
