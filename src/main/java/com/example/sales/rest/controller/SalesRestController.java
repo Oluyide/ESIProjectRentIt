@@ -1,6 +1,7 @@
 package com.example.sales.rest.controller;
 
 import com.example.common.application.exceptions.PlantNotFoundException;
+import com.example.common.application.exceptions.PurchaseOrderException;
 import com.example.common.rest.ExtendedLink;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.application.service.InventoryService;
@@ -65,14 +66,15 @@ public class SalesRestController {
         return salesService.rejectPurchaseOrder(id);
     }
 
-//    @DeleteMapping("/{id}")
-//    public PurchaseOrderDTO closePurchaseOrder(@PathVariable String id) throws Exception {
-//        return salesService.closePurchaseOrder(id);
-//    }
-
     @ExceptionHandler(PlantNotFoundException.class)
     @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
     public String bindExceptionHandler(Exception ex) {
+        return ex.getMessage();
+    }
+
+    @ExceptionHandler(PurchaseOrderException.class)
+    @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
+    public String bindPurchaseExceptionHandler(Exception ex) {
         return ex.getMessage();
     }
 }
