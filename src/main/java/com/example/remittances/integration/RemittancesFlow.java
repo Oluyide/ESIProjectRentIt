@@ -23,7 +23,7 @@ public abstract class RemittancesFlow {
     @Bean
     IntegrationFlow normalTrack() {
         return IntegrationFlows.from("normaltrack-channel")
-                .handle(System.out::println)
+                .handle("invoicingService", "processRemittance")
                 .get();
     }
 }

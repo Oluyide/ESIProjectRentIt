@@ -7,12 +7,14 @@ import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.model.PlantReservation;
 import com.example.inventory.domain.repository.PlantInventoryEntryRepository;
 import com.example.sales.application.dto.PurchaseOrderDTO;
+import com.example.sales.domain.model.POStatus;
 import com.example.sales.domain.model.PurchaseOrder;
 import com.example.sales.domain.repository.PurchaseOrderRepository;
 import com.example.sales.infrastructure.SalesIdentifierFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -83,5 +85,31 @@ public class SalesService {
         PurchaseOrder po = purchaseOrderRepository.findOne(id);
         po.handleClosure();
         return purchaseOrderAssembler.toResource(purchaseOrderRepository.save(po));
+    }
+
+    public PurchaseOrderDTO modifyPurchaseOrder(String id, LocalDate newStartDate, LocalDate newEndDate){
+        PurchaseOrder po = purchaseOrderRepository.findOne(id);
+
+        LocalDate oldStartDate = po.getRentalPeriod().getStartDate();
+        LocalDate oldEndDate = po.getRentalPeriod().getEndDate();
+
+        boolean purchaseOrderClashes = findPurchaseOrderWithDates(oldStartDate, oldEndDate);
+
+        if (purchaseOrderClashes == true){
+
+            //TODO: Should this ask for other available items?
+            po.handleRejection();
+            return purchaseOrderAssembler.toResource(po);
+        }
+        else{
+            PurchaseOrder newPO = PurchaseOrder.of(po.getId(), po.getPlant(), po.getRentalPeriod());
+            return purchaseOrderAssembler.toResource(purchaseOrderRepository.save(po));
+        }
+
+    }
+
+    public boolean findPurchaseOrderWithDates(LocalDate startDate, LocalDate endDate){
+
+        return false;
     }
 }

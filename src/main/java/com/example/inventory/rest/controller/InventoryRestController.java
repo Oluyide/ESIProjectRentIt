@@ -3,6 +3,7 @@ package com.example.inventory.rest.controller;
 import com.example.common.application.exceptions.PlantNotFoundException;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.application.service.InventoryService;
+import com.example.inventory.domain.model.PlantInventoryItemStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -50,5 +51,26 @@ public class InventoryRestController {
     public String handleNotFound(Exception exc) {
         return exc.getMessage();
     }
+
+    @PostMapping("/{id}/dispatched")
+    public void dispatchPlant(@PathVariable String id) throws PlantNotFoundException{
+        inventoryService.dispatchPlant(id);
+    }
+
+    @PostMapping("/{id}/delivered")
+    public void deliverPlant(@PathVariable String id) throws PlantNotFoundException{
+        inventoryService.deliverPlant(id);
+    }
+
+    @PostMapping("/{id}/rejected")
+    public void rejectPlant(@PathVariable String id) throws PlantNotFoundException{
+        inventoryService.rejectPlant(id);
+    }
+
+    @PostMapping("/{id}/returned")
+    public void returnPlant(@PathVariable String id) throws PlantNotFoundException{
+        inventoryService.returnPlant(id);
+    }
+
 }
 

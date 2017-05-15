@@ -4,6 +4,7 @@ import com.example.DemoApplication;
 import com.example.inventory.domain.model.EquipmentCondition;
 import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.model.PlantInventoryItem;
+import com.example.inventory.domain.model.PlantInventoryItemStatus;
 import com.example.inventory.domain.repository.PlantInventoryEntryRepository;
 import com.example.inventory.domain.repository.PlantInventoryItemRepository;
 import com.example.inventory.domain.repository.PlantReservationRepository;
@@ -77,7 +78,8 @@ public class CreationOfPurchaseOrderSteps {
                             row.get("id"),
                             row.get("serialNumber"),
                             EquipmentCondition.valueOf(row.get("equipmentCondition")),
-                            plantInventoryEntryRepository.findOne(row.get("plantInfo"))
+                            plantInventoryEntryRepository.findOne(row.get("plantInfo")),
+                            PlantInventoryItemStatus.RETURNED
                     )
             );
     }

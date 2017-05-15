@@ -20,4 +20,11 @@ public class PlantInventoryItem {
     EquipmentCondition equipmentCondition;
     @ManyToOne
     PlantInventoryEntry plantInfo;
+
+    @Enumerated(EnumType.STRING)
+    PlantInventoryItemStatus plantStatus;
+
+    public void handleStatusChange(PlantInventoryItemStatus status){
+        plantStatus = status;
+    }
 }
