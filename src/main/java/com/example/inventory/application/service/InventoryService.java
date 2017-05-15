@@ -62,28 +62,26 @@ public class InventoryService {
         return item;
     }
 
-    public void dispatchPlant(String id) throws PlantNotFoundException{
+    public void handlePlantStatusChange(String id, PlantInventoryItemStatus status) throws PlantNotFoundException{
         PlantInventoryItem item = findPlantItem(id);
-        item.handleStatusChange(PlantInventoryItemStatus.DISPATCHED);
+        item.handleStatusChange(status);
         plantInventoryItemRepository.save(item);
+    }
+
+    public void dispatchPlant(String id) throws PlantNotFoundException{
+        handlePlantStatusChange(id, PlantInventoryItemStatus.DISPATCHED);
     }
 
     public void deliverPlant(String id) throws PlantNotFoundException{
-        PlantInventoryItem item = findPlantItem(id);
-        item.handleStatusChange(PlantInventoryItemStatus.DELIVERED);
-        plantInventoryItemRepository.save(item);
+        handlePlantStatusChange(id, PlantInventoryItemStatus.DELIVERED);
     }
 
     public void rejectPlant(String id) throws PlantNotFoundException{
-        PlantInventoryItem item = findPlantItem(id);
-        item.handleStatusChange(PlantInventoryItemStatus.REJECTED_BY_CUSTOMER);
-        plantInventoryItemRepository.save(item);
+        handlePlantStatusChange(id, PlantInventoryItemStatus.REJECTED_BY_CUSTOMER);
     }
 
     public void returnPlant(String id) throws PlantNotFoundException{
-        PlantInventoryItem item = findPlantItem(id);
-        item.handleStatusChange(PlantInventoryItemStatus.RETURNED);
-        plantInventoryItemRepository.save(item);
+        handlePlantStatusChange(id, PlantInventoryItemStatus.RETURNED);
     }
 
 
