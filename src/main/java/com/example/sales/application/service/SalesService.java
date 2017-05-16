@@ -1,6 +1,7 @@
 package com.example.sales.application.service;
 
 import com.example.common.application.exceptions.PlantNotFoundException;
+import com.example.common.application.exceptions.PurchaseOrderException;
 import com.example.common.domain.model.BusinessPeriod;
 import com.example.inventory.application.service.InventoryService;
 import com.example.inventory.domain.model.PlantInventoryEntry;
@@ -63,6 +64,29 @@ public class SalesService {
         }
     }
 
+    public PurchaseOrderDTO updatePurchaseOrder(PurchaseOrderDTO purchaseOrderDTO) throws PlantNotFoundException {
+        PurchaseOrder po = purchaseOrderRepository.findOne(purchaseOrderDTO.get_id());
+        BusinessPeriod rentalPeriod = BusinessPeriod.of(purchaseOrderDTO.getRentalPeriod().getStartDate(), purchaseOrderDTO.getRentalPeriod().getEndDate());
+
+        PurchaseOrder newPo = PurchaseOrder.of(
+                po.getId(),
+                po.getPlant(),
+                rentalPeriod
+        );
+
+        try {
+            PlantReservation plantReservation = inventoryService.createPlantReservation(newPo.getPlant(), rentalPeriod);
+            newPo.confirmReservation(plantReservation, newPo.getPlant().getPrice());
+            newPo = purchaseOrderRepository.save(newPo);
+            return purchaseOrderAssembler.toResource(newPo);
+        } catch (PlantNotFoundException e) {
+            newPo.handleRejection();
+            purchaseOrderRepository.save(newPo);
+
+            throw e;
+        }
+    }
+
     public PurchaseOrderDTO findPurchaseOrder(String id) {
         return purchaseOrderAssembler.toResource(purchaseOrderRepository.findOne(id));
     }
@@ -81,9 +105,13 @@ public class SalesService {
         po.handleRejection();
         return purchaseOrderAssembler.toResource(purchaseOrderRepository.save(po));
     }
-    public PurchaseOrderDTO closePurchaseOrder(String id){
+    public PurchaseOrderDTO closePurchaseOrder(String id) throws PurchaseOrderException{
         PurchaseOrder po = purchaseOrderRepository.findOne(id);
-        po.handleClosure();
+        if (LocalDate.now().isBefore(po.getRentalPeriod().getStartDate())) {
+            po.handleClosure();
+        } else {
+            throw new PurchaseOrderException("Too late to cancel purchase order.");
+        }
         return purchaseOrderAssembler.toResource(purchaseOrderRepository.save(po));
     }
 
