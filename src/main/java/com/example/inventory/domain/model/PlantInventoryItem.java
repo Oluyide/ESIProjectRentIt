@@ -27,4 +27,8 @@ public class PlantInventoryItem {
     public void handleStatusChange(PlantInventoryItemStatus status){
         plantStatus = status;
     }
+    public void handleConditionChange(EquipmentCondition condition){
+        equipmentCondition = condition;
+    }
+
 }
