@@ -1,0 +1,6 @@
+version: "3"
+services:
+  backend:
+    image: amateush/backend
+    ports:
+      - "8080:8080"

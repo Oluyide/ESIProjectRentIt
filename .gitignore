@@ -19,7 +19,7 @@ target
 .springBeans
 interpolated*.xml
 dependency-reduced-pom.xml
-build.log
+*.log
 _site/
 .*.md.html
 manifest.yml

@@ -35,10 +35,10 @@ interface InvoicingGatewayService extends InvoicingGateway{
 
 @Configuration
 public class MailIntegration {
-    @Value("${gmail.username}")
-    String gmailUsername;
-    @Value("${gmail.password}")
-    String gmailPassword;
+    //@Value("${gmail.username}")
+    String gmailUsername="esi2017.g17";
+    //@Value("${gmail.password}")
+    String gmailPassword="nocheese";
 
     @Autowired
     InvoicingGateway invoicingGateway;

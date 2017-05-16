@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class RemittancesMailFlow extends RemittancesFlow{
 
-    @Value("${gmail.username}")
-    String gmailUsername;
-    @Value("${gmail.password}")
-    String gmailPassword;
+    //@Value("${gmail.username}")
+    String gmailUsername="esi2017.g17";
+    //@Value("${gmail.password}")
+    String gmailPassword="nocheese";
 
     @Bean
     IntegrationFlow inboundMail() {
