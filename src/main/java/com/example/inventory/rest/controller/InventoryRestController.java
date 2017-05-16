@@ -22,7 +22,7 @@ public class InventoryRestController {
     InventoryService inventoryService;
 
     @GetMapping
-    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE", "ROLE_EXTERNAL_USER", "MAINTENANCE_TL"})
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE", "ROLE_EXTERNAL_USER", "ROLE_MAINTENANCE_TL"})
     public List<PlantInventoryEntryDTO> findAvailablePlants(
             @RequestParam(name = "name", required = false) Optional<String> plantName,
             @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> startDate,
@@ -77,11 +77,13 @@ public class InventoryRestController {
     }
 
     @PostMapping("/{id}/returned/maintenance")
-    public void sheduleMaintenance(@PathVariable String id) throws PlantNotFoundException{
+    @Secured({"ROLE_MAINTENANCE_ML"})
+    public void scheduleMaintenance(@PathVariable String id) throws PlantNotFoundException{
         inventoryService.ScheduleMaintenance(id);
     }
 
     @PostMapping("/{id}/returned/serviceable")
+    @Secured({"ROLE_MAINTENANCE_ML"})
     public void completeMaintenance(@PathVariable String id) throws PlantNotFoundException{
         inventoryService.CompleteMaintenance(id);
     }

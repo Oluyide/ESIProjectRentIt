@@ -4,5 +4,7 @@ create table if not exists authorities (username varchar(50) not null, authority
 insert into users (username, password, enabled) values ('admin', 'admin', true);
 insert into authorities (username, authority) values ('admin', 'ROLE_ADMIN');
 insert into users (username, password, enabled) values ('user1', 'user1', true);
+insert into users (username, password, enabled) values ('user2', 'user2', true);
 insert into authorities (username, authority) values ('user1', 'ROLE_USER1');
 insert into authorities (username, authority) values ('user1', 'ROLE_ADMIN');
+insert into authorities (username, authority) values ('user2', 'ROLE_MAINTENANCE_TL');
