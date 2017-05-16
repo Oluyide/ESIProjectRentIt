@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 /**
  * Created by gerson on 15/05/17.
@@ -18,9 +19,7 @@ import java.math.BigDecimal;
 public class Invoice {
     @Id
     String _id;
-
     BigDecimal totalPrice;
-
     @Enumerated(EnumType.STRING)
     InvoiceStatus invoiceStatus;
 
