@@ -38,6 +38,15 @@ public class InventoryRestController {
                             plantName.get(), startDate.get(), endDate.get()));
     }
 
+
+    @GetMapping("/reservations/{startDate}")
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
+    public List<PlantInventoryEntryDTO> findReservations(
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate
+    ) {
+            return inventoryService.findReservations(startDate);
+    }
+
     @GetMapping("/{id}")
     @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE", "ROLE_EXTERNAL_USER"})
     public PlantInventoryEntryDTO show(@PathVariable String id) throws PlantNotFoundException {
