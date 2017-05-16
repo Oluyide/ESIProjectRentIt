@@ -77,13 +77,13 @@ public class InventoryRestController {
     }
 
     @PostMapping("/{id}/returned/maintenance")
-    @Secured({"ROLE_MAINTENANCE_ML"})
+    @Secured({"ROLE_MAINTENANCE_TL"})
     public void scheduleMaintenance(@PathVariable String id) throws PlantNotFoundException{
         inventoryService.ScheduleMaintenance(id);
     }
 
     @PostMapping("/{id}/returned/serviceable")
-    @Secured({"ROLE_MAINTENANCE_ML"})
+    @Secured({"ROLE_MAINTENANCE_TL"})
     public void completeMaintenance(@PathVariable String id) throws PlantNotFoundException{
         inventoryService.CompleteMaintenance(id);
     }
