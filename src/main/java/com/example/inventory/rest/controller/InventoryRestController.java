@@ -65,21 +65,25 @@ public class InventoryRestController {
         return exc.getMessage();
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
     @PostMapping("/{id}/dispatched")
     public void dispatchPlant(@PathVariable String id) throws PlantNotFoundException{
         inventoryService.dispatchPlant(id);
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
     @PostMapping("/{id}/delivered")
     public void deliverPlant(@PathVariable String id) throws PlantNotFoundException{
         inventoryService.deliverPlant(id);
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
     @PostMapping("/{id}/rejected")
     public void rejectPlant(@PathVariable String id) throws PlantNotFoundException{
         inventoryService.rejectPlant(id);
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
     @PostMapping("/{id}/returned")
     public void returnPlant(@PathVariable String id) throws PlantNotFoundException{
         inventoryService.returnPlant(id);

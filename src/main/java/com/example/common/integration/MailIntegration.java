@@ -54,7 +54,7 @@ public class MailIntegration {
                 .get();
     }
 
-    public void sendMail(String toEmail, String subject, String body) throws Exception{
+    public void sendMail(String toEmail, String subject, String body, String attachmentName, String attachmentText) throws Exception{
         JavaMailSender mailSender = new JavaMailSenderImpl();
 
         MimeMessage rootMessage = mailSender.createMimeMessage();
@@ -63,6 +63,10 @@ public class MailIntegration {
         helper.setTo(toEmail);   // (also here)
         helper.setSubject(subject); // Check the spelling the subject
         helper.setText(body + "\n\nKindly yours,\n\nRentIt Team!");
+
+        if (attachmentName != null){
+            helper.addAttachment(attachmentName, new ByteArrayDataSource(attachmentText, "application/json"));
+        }
 
 // I am Assuming "invoicingGateway" is an autowired reference to a spring bean
 // associated with "InvoicingGateway"

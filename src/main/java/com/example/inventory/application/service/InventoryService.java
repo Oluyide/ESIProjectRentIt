@@ -2,12 +2,16 @@ package com.example.inventory.application.service;
 
 import com.example.common.application.exceptions.PlantNotFoundException;
 import com.example.common.domain.model.BusinessPeriod;
+import com.example.common.integration.MailIntegration;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.domain.model.*;
 import com.example.inventory.domain.repository.InventoryRepository;
 import com.example.inventory.domain.repository.PlantInventoryItemRepository;
 import com.example.inventory.domain.repository.PlantReservationRepository;
 import com.example.inventory.infrastructure.InventoryIdentifierFactory;
+import com.example.inventory.infrastructure.InvoiceIdentifierFactory;
+import com.example.remittances.domain.model.Invoice;
+import com.example.remittances.domain.model.InvoiceStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +33,12 @@ public class InventoryService {
 
     @Autowired
     PlantInventoryItemRepository plantInventoryItemRepository;
+
+    @Autowired
+    InvoiceIdentifierFactory invoiceIdentifierFactory;
+
+    @Autowired
+    MailIntegration mailIntegration;
 
     public List<PlantInventoryEntryDTO> findAvailablePlants(String name, LocalDate startDate, LocalDate endDate) {
         return plantInventoryEntryAssembler.toResources(inventoryRepository.findAvailable(name, startDate, endDate));
@@ -64,10 +74,38 @@ public class InventoryService {
         return item;
     }
 
-    public void handlePlantStatusChange(String id, PlantInventoryItemStatus status) throws PlantNotFoundException{
+    public PlantInventoryItem handlePlantStatusChange(String id, PlantInventoryItemStatus status) throws PlantNotFoundException{
         PlantInventoryItem item = findPlantItem(id);
         item.handleStatusChange(status);
-        plantInventoryItemRepository.save(item);
+
+        return plantInventoryItemRepository.save(item);
+    }
+
+    public void generateInvoice(PlantInventoryItem item){
+        Invoice invoice = Invoice.of(
+                invoiceIdentifierFactory.nextInvoiceID(),
+                item.getPlantInfo().getPrice(),
+                InvoiceStatus.PENDING
+        );
+
+
+        String invoice1 =
+                "{\n" +
+                        "   \"_id\":\"" + invoice.get_id() + "\",\n" +
+                        "   \"totalPrice\":" + invoice.getTotalPrice() + ",\n" +
+                        "   \"invoiceStatus\": \"" + invoice.getInvoiceStatus() +"\"\n" +
+                 "}\n";
+        try {
+            mailIntegration.sendMail(
+                    "esi2017.g17@gmail.com",
+                    "invoice",
+                    "Hello\n\nYour invoice is attached.",
+                    "invoice.json",
+                    invoice1
+            );
+        }
+        catch (Exception e){}
+
     }
 
     public void handleEquipmentConditionChange(String id, EquipmentCondition condition) throws PlantNotFoundException{
@@ -101,7 +139,8 @@ public class InventoryService {
     }
 
     public void returnPlant(String id) throws PlantNotFoundException{
-        handlePlantStatusChange(id, PlantInventoryItemStatus.RETURNED);
+        PlantInventoryItem item = handlePlantStatusChange(id, PlantInventoryItemStatus.RETURNED);
+        generateInvoice(item);
     }
 
 

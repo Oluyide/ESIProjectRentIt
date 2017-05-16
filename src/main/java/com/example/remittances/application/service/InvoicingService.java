@@ -35,7 +35,7 @@ public class InvoicingService {
                 try {
                     String body = "Dear customer,\n\nThe remittance for invoice number " + invoice.get_id() + " has been approved" +
                             "and the invoice has bee marked as paid. Thank you.";
-                    mailIntegration.sendMail("esi2017.e17@gmail.com", "Remittance approved", body);
+                    mailIntegration.sendMail("esi2017.e17@gmail.com", "Remittance approved", body, null, null);
                 }
                 catch(Exception e){}
 
@@ -46,7 +46,7 @@ public class InvoicingService {
                 try {
                     String body = "Dear customer,\n\nThe remittance for invoice number " + invoice.get_id() + " has been rejected " +
                             "because the total price does not coincide with our records. Please check it and try again.";
-                    mailIntegration.sendMail("esi2017.e17@gmail.com", "Remittance rejected", body);
+                    mailIntegration.sendMail("esi2017.e17@gmail.com", "Remittance rejected", body, null, null);
                 }
                 catch(Exception e){}
             }
@@ -59,7 +59,7 @@ public class InvoicingService {
             try {
                 String body = "Dear customer,\n\nThe remittance for invoice number " + invoice.get_id() + " has been rejected " +
                         "because there's no invoice associated with that ID. Please check it and try again.";
-                mailIntegration.sendMail("esi2017.e17@gmail.com", "Remittance rejected", body);
+                mailIntegration.sendMail("esi2017.e17@gmail.com", "Remittance rejected", body, null, null);
             }
             catch(Exception e){}
         }
