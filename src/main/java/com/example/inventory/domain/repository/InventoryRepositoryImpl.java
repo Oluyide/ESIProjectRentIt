@@ -26,4 +26,13 @@ public class InventoryRepositoryImpl implements CustomInventoryRepository {
                 .setParameter(3, endDate);
         return query.getResultList();
     }
+
+    @Override
+    public List<PlantInventoryEntry> findDeployedOn(LocalDate startDate) {
+        TypedQuery<PlantInventoryEntry> query = em.createQuery(
+                "select i.plantInfo from PlantInventoryItem i where i.equipmentCondition = com.example.inventory.domain.model.EquipmentCondition.SERVICEABLE and i in (select r.plant from PlantReservation r where ?1 = r.schedule.startDate)"
+                , PlantInventoryEntry.class)
+                .setParameter(1, startDate);
+        return query.getResultList();
+    }
 }

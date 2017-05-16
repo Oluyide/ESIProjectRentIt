@@ -8,14 +8,14 @@ import com.example.sales.application.service.SalesService;
 import com.example.sales.domain.model.PurchaseOrder;
 import com.example.sales.web.dto.CatalogQueryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/dashboard")
@@ -44,6 +44,24 @@ public class DashboardController {
         po.setRentalPeriod(query.getRentalPeriod());
         model.addAttribute("po", po);
         return "dashboard/catalog/query-result";
+    }
+
+    @GetMapping("/catalog/reservationsForm")
+    public String getReservationsForm(Model model) {
+        return "dashboard/catalog/reservations-form";
+    }
+
+    @GetMapping("/catalog/reservations")
+    public String queryReservations(Model model, @RequestParam(name = "startDate")  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> startDate) {
+        if(startDate.isPresent()) {
+            List<PlantInventoryEntryDTO> plants = inventoryService.findReservations(startDate.get());
+            model.addAttribute("plants", plants);
+            model.addAttribute("startDate", startDate.get());
+            return "dashboard/catalog/reservations-result";
+        }
+        else {
+            throw new IllegalArgumentException("Start Date not present or wrong");
+        }
     }
 
     @PostMapping("/orders")

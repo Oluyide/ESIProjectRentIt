@@ -10,4 +10,5 @@ import java.util.List;
  */
 public interface CustomInventoryRepository {
     List<PlantInventoryEntry> findAvailable(String name, LocalDate startDate, LocalDate endDate);
+    List<PlantInventoryEntry> findDeployedOn(LocalDate startDate);
 }
