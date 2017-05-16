@@ -3,10 +3,7 @@ package com.example.inventory.application.service;
 import com.example.common.application.exceptions.PlantNotFoundException;
 import com.example.common.domain.model.BusinessPeriod;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
-import com.example.inventory.domain.model.PlantInventoryEntry;
-import com.example.inventory.domain.model.PlantInventoryItem;
-import com.example.inventory.domain.model.PlantInventoryItemStatus;
-import com.example.inventory.domain.model.PlantReservation;
+import com.example.inventory.domain.model.*;
 import com.example.inventory.domain.repository.InventoryRepository;
 import com.example.inventory.domain.repository.PlantInventoryItemRepository;
 import com.example.inventory.domain.repository.PlantReservationRepository;
@@ -67,6 +64,24 @@ public class InventoryService {
         item.handleStatusChange(status);
         plantInventoryItemRepository.save(item);
     }
+
+    public void handleEquipmentConditionChange(String id, EquipmentCondition condition) throws PlantNotFoundException{
+        PlantInventoryItem item = findPlantItem(id);
+        item.handleConditionChange(condition);
+        plantInventoryItemRepository.save(item);
+    }
+
+
+    public void ScheduleMaintenance (String id) throws PlantNotFoundException
+    {
+        handleEquipmentConditionChange(id, EquipmentCondition.UNSERVICEABLE_REPAIRABLE);
+    }
+
+    public void CompleteMaintenance (String id) throws PlantNotFoundException
+    {
+        handleEquipmentConditionChange(id, EquipmentCondition.SERVICEABLE);
+    }
+
 
     public void dispatchPlant(String id) throws PlantNotFoundException{
         handlePlantStatusChange(id, PlantInventoryItemStatus.DISPATCHED);
