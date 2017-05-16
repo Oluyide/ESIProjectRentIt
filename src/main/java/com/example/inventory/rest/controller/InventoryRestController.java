@@ -3,6 +3,7 @@ package com.example.inventory.rest.controller;
 import com.example.common.application.exceptions.PlantNotFoundException;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.application.service.InventoryService;
+import com.example.inventory.domain.model.PlantInventoryItem;
 import com.example.inventory.domain.model.PlantInventoryItemStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -91,8 +92,8 @@ public class InventoryRestController {
 
     @PostMapping("/{id}/returned/maintenance")
     @Secured({"ROLE_MAINTENANCE_TL"})
-    public void scheduleMaintenance(@PathVariable String id) throws PlantNotFoundException{
-        inventoryService.ScheduleMaintenance(id);
+    public PlantInventoryItem scheduleMaintenance(@PathVariable String id) throws PlantNotFoundException{
+        return inventoryService.ScheduleMaintenance(id);
     }
 
     @PostMapping("/{id}/returned/serviceable")

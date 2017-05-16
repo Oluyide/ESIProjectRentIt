@@ -12,6 +12,8 @@ import com.example.inventory.infrastructure.InventoryIdentifierFactory;
 import com.example.inventory.infrastructure.InvoiceIdentifierFactory;
 import com.example.remittances.domain.model.Invoice;
 import com.example.remittances.domain.model.InvoiceStatus;
+import com.example.sales.domain.model.PurchaseOrder;
+import com.example.sales.domain.repository.PurchaseOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +41,9 @@ public class InventoryService {
 
     @Autowired
     MailIntegration mailIntegration;
+
+    @Autowired
+    PurchaseOrderRepository purchaseOrderRepository;
 
     public List<PlantInventoryEntryDTO> findAvailablePlants(String name, LocalDate startDate, LocalDate endDate) {
         return plantInventoryEntryAssembler.toResources(inventoryRepository.findAvailable(name, startDate, endDate));
@@ -108,16 +113,39 @@ public class InventoryService {
 
     }
 
-    public void handleEquipmentConditionChange(String id, EquipmentCondition condition) throws PlantNotFoundException{
+    public PlantInventoryItem handleEquipmentConditionChange(String id, EquipmentCondition condition) throws PlantNotFoundException{
         PlantInventoryItem item = findPlantItem(id);
         item.handleConditionChange(condition);
-        plantInventoryItemRepository.save(item);
+        return plantInventoryItemRepository.save(item);
     }
 
 
-    public void ScheduleMaintenance (String id) throws PlantNotFoundException
+    public PlantInventoryItem replaceRepairedPlant(PlantInventoryItem item){
+        PlantInventoryEntry entry = item.getPlantInfo();
+        List<PlantInventoryItem> items = plantInventoryItemRepository.findAllByPlantInfo(entry);
+        for (PlantInventoryItem i: items) {
+            if (!i.getId().equalsIgnoreCase(item.getId()) && i.getEquipmentCondition() == EquipmentCondition.SERVICEABLE){
+
+                System.out.println("has found a new item with id" + i.getId());
+
+                i.handleStatusChange(PlantInventoryItemStatus.RESERVED);
+
+
+                item.handleStatusChange(PlantInventoryItemStatus.RETURNED);
+                plantInventoryItemRepository.save(item);
+
+                return plantInventoryItemRepository.save(i);
+            }
+            break;
+        }
+
+        return item;
+    }
+
+    public PlantInventoryItem ScheduleMaintenance (String id) throws PlantNotFoundException
     {
-        handleEquipmentConditionChange(id, EquipmentCondition.UNSERVICEABLE_REPAIRABLE);
+        PlantInventoryItem item = handleEquipmentConditionChange(id, EquipmentCondition.UNSERVICEABLE_REPAIRABLE);
+        return replaceRepairedPlant(item);
     }
 
     public void CompleteMaintenance (String id) throws PlantNotFoundException
