@@ -18,4 +18,8 @@ public class PlantReservation {
 
     @Embedded
     BusinessPeriod schedule;
+
+    public void changeReservedPlant(PlantInventoryItem plant){
+        this.plant = plant;
+    }
 }

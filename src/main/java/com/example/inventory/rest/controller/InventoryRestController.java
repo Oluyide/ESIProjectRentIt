@@ -92,7 +92,7 @@ public class InventoryRestController {
 
     @PostMapping("/{id}/returned/maintenance")
     @Secured({"ROLE_MAINTENANCE_TL"})
-    public PlantInventoryItem scheduleMaintenance(@PathVariable String id) throws PlantNotFoundException{
+    public PlantInventoryItem scheduleMaintenance(@PathVariable String id) throws Exception{
         return inventoryService.ScheduleMaintenance(id);
     }
 
