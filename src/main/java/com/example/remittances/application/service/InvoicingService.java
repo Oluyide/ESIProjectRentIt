@@ -26,29 +26,40 @@ public class InvoicingService {
 
         Invoice invoice = invoiceRepository.getOne(remittance.getInvoiceId());
 
+
         if (invoice != null){
 
+            if(invoice.getInvoiceStatus() == InvoiceStatus.PENDING) {
+                if (remittance.getTotal().compareTo(invoice.getTotalPrice()) == 0) {
+                    invoice.handleStatusChange(InvoiceStatus.APPROVED);
 
-            if (remittance.getTotal().compareTo(invoice.getTotalPrice()) == 0){
+                    try {
+                        String body = "Dear customer,\n\nThe remittance for invoice number " + invoice.get_id() + " has been received" +
+                                "and the invoice has been marked as approved. We're waiting for your payment. Thank you.";
+                        mailIntegration.sendMail("esi2017.e17@gmail.com", "Remittance approved", body, null, null);
+                    } catch (Exception e) {
+                    }
+                } else {
+                    invoice.handleStatusChange(InvoiceStatus.REJECTED);
+
+                    try {
+                        String body = "Dear customer,\n\nThe remittance for invoice number " + invoice.get_id() + " has been rejected " +
+                                "because the total price does not coincide with our records. Please check it and try again.";
+                        mailIntegration.sendMail("esi2017.e17@gmail.com", "Remittance rejected", body, null, null);
+                    } catch (Exception e) {
+                    }
+                }
+            }
+
+            else if (invoice.getInvoiceStatus() == InvoiceStatus.APPROVED) {
                 invoice.handleStatusChange(InvoiceStatus.PAID);
 
                 try {
-                    String body = "Dear customer,\n\nThe remittance for invoice number " + invoice.get_id() + " has been approved" +
-                            "and the invoice has bee marked as paid. Thank you.";
-                    mailIntegration.sendMail("esi2017.e17@gmail.com", "Remittance approved", body, null, null);
+                    String body = "Dear customer,\n\nThe remittance for invoice number " + invoice.get_id() + " has been received" +
+                            "and the invoice has been marked as paid. Thank you.";
+                    mailIntegration.sendMail("esi2017.e17@gmail.com", "Remittance paid", body, null, null);
+                } catch (Exception e) {
                 }
-                catch(Exception e){}
-
-            }
-            else{
-                invoice.handleStatusChange(InvoiceStatus.REJECTED);
-
-                try {
-                    String body = "Dear customer,\n\nThe remittance for invoice number " + invoice.get_id() + " has been rejected " +
-                            "because the total price does not coincide with our records. Please check it and try again.";
-                    mailIntegration.sendMail("esi2017.e17@gmail.com", "Remittance rejected", body, null, null);
-                }
-                catch(Exception e){}
             }
 
             invoiceRepository.save(invoice);
