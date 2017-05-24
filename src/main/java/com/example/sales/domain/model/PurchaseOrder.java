@@ -31,12 +31,13 @@ public class PurchaseOrder {
     @Column(precision = 8, scale = 2)
     BigDecimal total;
 
-    public static PurchaseOrder of(String id, PlantInventoryEntry plant, BusinessPeriod rentalPeriod) {
+    public static PurchaseOrder of(String id, PlantInventoryEntry plant, BusinessPeriod rentalPeriod, BigDecimal total) {
         PurchaseOrder po = new PurchaseOrder();
         po.id = id;
         po.plant = plant;
         po.rentalPeriod = rentalPeriod;
         po.status = POStatus.CREATED;
+        po.total = total;
         return po;
     }
 

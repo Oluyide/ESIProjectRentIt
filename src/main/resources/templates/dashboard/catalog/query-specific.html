@@ -1,7 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>List all Plants</title>
+    <title>Plant Information</title>
 
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"></link>
 </head>
@@ -16,7 +16,12 @@
             <p>ID <label th:text="${plant._id}"></label></p>
             <p>Description <label th:text="${plant.description}"></label></p>
             <p>Price <label th:text="${plant.price}"></label></p>
-
+            <p>
+                <form th:object="${plant}" th:method="get" th:action="@{'/dashboard/catalog/query/plant-items'}">
+                    <input type="hidden" name="id" th:value="${plant._id}"></input>
+                    <button class="btn btn-default btn-xs" type="submit">See all plants items</button>
+                </form>
+            </p>
 
         </div>
     </div>

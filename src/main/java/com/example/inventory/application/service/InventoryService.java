@@ -69,6 +69,11 @@ public class InventoryService {
         return plantInventoryEntryAssembler.toResource(inventoryRepository.findOne(id));
     }
 
+    public List<PlantInventoryItem> findPlantItems(String id){
+        PlantInventoryEntry entry = inventoryRepository.findOne(id);
+        return plantInventoryItemRepository.findAllByPlantInfo(entry);
+    }
+
     public PlantInventoryItem findPlantItem(String id) throws PlantNotFoundException{
 
         PlantInventoryItem item = plantInventoryItemRepository.findOne(id);
@@ -93,7 +98,6 @@ public class InventoryService {
                 item.getPlantInfo().getPrice(),
                 InvoiceStatus.PENDING
         );
-
 
         String invoice1 =
                 "{\n" +

@@ -1,0 +1,62 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Plant Items</title>
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"></link>
+</head>
+<body>
+
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">List of Plants</div>
+        <div class="panel-body">
+
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Serial No.</th>
+                    <th>Condition</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="table-row" th:each="p : ${plants}">
+                    <td th:text="${p.id}"></td>
+                    <td th:text="${p.serialNumber}"></td>
+                    <td th:text="${p.equipmentCondition}"></td>
+                    <td th:text="${p.plantStatus}"></td>
+                    <td>
+                        <form style ='float:left; padding:5px; height:0px' th:object="${p}" th:method="post" th:action="@{'/dashboard/catalog/plant-action/dispatch'}">
+                            <input type="hidden" name="id" th:value="${p.id}"></input>
+                            <button class="btn btn-default btn-xs" type="submit">Dispatch</button>
+                        </form>
+
+                        <form style ='float:left; padding:5px; height:0px' th:object="${p}" th:method="post" th:action="@{'/dashboard/catalog/plant-action/deliver'}">
+                            <input type="hidden" name="id" th:value="${p.id}"></input>
+                            <button class="btn btn-default btn-xs" type="submit">Deliver</button>
+                        </form>
+
+                        <form style ='float:left; padding:5px; height:0px' th:object="${p}" th:method="post" th:action="@{'/dashboard/catalog/plant-action/reject'}">
+                            <input type="hidden" name="id" th:value="${p.id}"></input>
+                            <button class="btn btn-default btn-xs" type="submit">Reject</button>
+                        </form>
+
+                        <form style ='float:left; padding:5px; height:0px' th:object="${p}" th:method="post" th:action="@{'/dashboard/catalog/plant-action/return'}">
+                            <input type="hidden" name="id" th:value="${p.id}"></input>
+                            <button class="btn btn-default btn-xs" type="submit">Return</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</body>
+</html>

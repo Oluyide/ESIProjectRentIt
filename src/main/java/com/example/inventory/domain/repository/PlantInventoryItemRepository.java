@@ -12,4 +12,5 @@ import java.util.List;
 public interface PlantInventoryItemRepository extends JpaRepository<PlantInventoryItem, String>{
     PlantInventoryItem findOneByPlantInfo(PlantInventoryEntry entry);
     List<PlantInventoryItem> findAllByPlantInfoAndEquipmentCondition(PlantInventoryEntry entry, EquipmentCondition condition);
+    List<PlantInventoryItem> findAllByPlantInfo(PlantInventoryEntry entry);
 }

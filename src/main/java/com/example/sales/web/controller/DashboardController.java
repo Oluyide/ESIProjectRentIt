@@ -7,8 +7,10 @@ import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.model.PlantInventoryItem;
 import com.example.sales.application.dto.PurchaseOrderDTO;
 import com.example.sales.application.service.SalesService;
+import com.example.sales.domain.model.POStatus;
 import com.example.sales.domain.model.PurchaseOrder;
 import com.example.sales.web.dto.CatalogQueryDTO;
+import com.sun.mail.imap.protocol.MODSEQ;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -45,6 +47,13 @@ public class DashboardController {
         po.setRentalPeriod(query.getRentalPeriod());
         model.addAttribute("po", po);
         return "dashboard/catalog/query-result";
+    }
+
+    @GetMapping("/catalog/query/plant-items")
+    public String queryPlantItems(Model model, @RequestParam(name="id") String id){
+        List<PlantInventoryItem> items = inventoryService.findPlantItems(id);
+        model.addAttribute("plants", items);
+        return "dashboard/catalog/plant-items";
     }
 
     @GetMapping("/catalog/query/{id}")
@@ -102,6 +111,88 @@ public class DashboardController {
 
         model.addAttribute("message", message);
 
-        return "dashboard/orders/cancel";
+        return "dashboard/orders/order-action";
+    }
+
+    @GetMapping("/orders/modify")
+    public String modifyPO(Model model, @RequestParam(name="id") String id){
+        PurchaseOrderDTO po = salesService.findPurchaseOrder(id);
+        model.addAttribute("po", po);
+        model.addAttribute("catalogQuery", new CatalogQueryDTO());
+        return "dashboard/orders/modify";
+    }
+
+    @PostMapping("/orders/modify")
+    public String modifyPO(Model model, String id, CatalogQueryDTO dto){
+        PurchaseOrderDTO po = salesService.modifyPurchaseOrder(id, dto.getRentalPeriod().getStartDate(), dto.getRentalPeriod().getEndDate());
+
+        String message = "";
+        if (po.getStatus() == POStatus.REJECTED){
+            message = "Purchase order modification rejected";
+        }
+        else{
+            message = "Purchase order modification successful";
+        }
+
+        System.out.println(po);
+        model.addAttribute("message", message);
+
+        return "dashboard/orders/order-action";
+    }
+
+    @PostMapping("/catalog/plant-action/dispatch")
+    public String dispatchPlant(Model model, String id){
+        String message = "";
+        try{
+            inventoryService.dispatchPlant(id);
+            message = "Plant dispatched successfully";
+        }
+        catch(Exception e){ message = e.getMessage(); }
+
+        model.addAttribute("message", message);
+
+        return "dashboard/catalog/plant-action";
+    }
+
+    @PostMapping("/catalog/plant-action/deliver")
+    public String deliverPlant(Model model, String id){
+        String message = "";
+        try{
+            inventoryService.deliverPlant(id);
+            message = "Plant delivered successfully";
+        }
+        catch(Exception e){ message = e.getMessage(); }
+
+        model.addAttribute("message", message);
+
+        return "dashboard/catalog/plant-action";
+    }
+
+    @PostMapping("/catalog/plant-action/reject")
+    public String rejectPlant(Model model, String id){
+        String message = "";
+        try{
+            inventoryService.rejectPlant(id);
+            message = "Plant rejected successfully";
+        }
+        catch(Exception e){ message = e.getMessage(); }
+
+        model.addAttribute("message", message);
+
+        return "dashboard/catalog/plant-action";
+    }
+
+    @PostMapping("/catalog/plant-action/return")
+    public String returnPlant(Model model, String id){
+        String message = "";
+        try{
+            inventoryService.returnPlant(id);
+            message = "Plant returned successfully";
+        }
+        catch(Exception e){ message = e.getMessage(); }
+
+        model.addAttribute("message", message);
+
+        return "dashboard/catalog/plant-action";
     }
 }

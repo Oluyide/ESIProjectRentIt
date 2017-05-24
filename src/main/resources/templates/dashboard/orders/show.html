@@ -1,7 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>New Plant</title>
+    <title>Purchase Order</title>
 
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"></link>
 </head>
@@ -36,6 +36,11 @@
                 <form style ='float:left; padding:5px; height:0px' th:object="${po._id}" th:method="post" th:action="@{'/dashboard/orders/cancel'}">
                     <input type="hidden" name="id" th:value="${po._id}"></input>
                     <button class="btn btn-default btn-xs" type="submit">Cancel PO</button>
+                </form>
+
+                <form style ='float:left; padding:5px; height:0px' th:object="${po._id}" th:method="get" th:action="@{'/dashboard/orders/modify'}">
+                    <input type="hidden" name="id" th:value="${po._id}"></input>
+                    <button class="btn btn-default btn-xs" type="submit">Modify PO</button>
                 </form>
             </div>
 

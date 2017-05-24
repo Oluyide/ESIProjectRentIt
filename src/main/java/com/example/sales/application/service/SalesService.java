@@ -41,7 +41,8 @@ public class SalesService {
         PurchaseOrder po = PurchaseOrder.of(
                 identifierFactory.nextPurchaseOrderID(),
                 plantInventoryEntry,
-                rentalPeriod);
+                rentalPeriod,
+                plantInventoryEntry.getPrice());
 
 //        DataBinder binder = new DataBinder(po);
 //        binder.addValidators(new PurchaseOrderValidator(new BusinessPeriodValidator()));
@@ -71,7 +72,8 @@ public class SalesService {
         PurchaseOrder newPo = PurchaseOrder.of(
                 po.getId(),
                 po.getPlant(),
-                rentalPeriod
+                rentalPeriod,
+                po.getTotal()
         );
 
         try {
@@ -130,8 +132,8 @@ public class SalesService {
             return purchaseOrderAssembler.toResource(po);
         }
         else{
-            PurchaseOrder newPO = PurchaseOrder.of(po.getId(), po.getPlant(), po.getRentalPeriod());
-            return purchaseOrderAssembler.toResource(purchaseOrderRepository.save(po));
+            PurchaseOrder newPO = PurchaseOrder.of(po.getId(), po.getPlant(), BusinessPeriod.of(newStartDate, newEndDate), po.getTotal());
+            return purchaseOrderAssembler.toResource(purchaseOrderRepository.save(newPO));
         }
 
     }
