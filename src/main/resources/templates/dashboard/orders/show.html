@@ -32,6 +32,13 @@
                 <div class="col-sm-8" th:text="${po.status}"></div>
             </div>
 
+            <div class="row">
+                <form style ='float:left; padding:5px; height:0px' th:object="${po._id}" th:method="post" th:action="@{'/dashboard/orders/cancel'}">
+                    <input type="hidden" name="id" th:value="${po._id}"></input>
+                    <button class="btn btn-default btn-xs" type="submit">Cancel PO</button>
+                </form>
+            </div>
+
         </div>
     </div>
 </div>

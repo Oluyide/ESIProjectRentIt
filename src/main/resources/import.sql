@@ -31,4 +31,4 @@ insert into plant_inventory_item (id, plant_info_id, serial_number, equipment_co
 insert into plant_inventory_item (id, plant_info_id, serial_number, equipment_condition, plant_status) values (4, 1, 'A04', 'SERVICEABLE', 'RETURNED');
 
 insert into plant_reservation (id, plant_id, start_date, end_date) values (1, 1, '2017-03-22', '2017-03-24');
-insert into purchase_order values ('1', '2017-03-27', '2017-03-28', 'OPEN', 100, 1);
+insert into purchase_order values ('1', '2018-03-27', '2018-03-28', 'OPEN', 100, 1);

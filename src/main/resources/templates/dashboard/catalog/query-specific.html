@@ -1,0 +1,28 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>List all Plants</title>
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"></link>
+</head>
+<body>
+
+<div class="container" style="padding-top: 20px">
+    <div class="panel panel-default">
+        <div class="panel-heading">Plant Information</div>
+        <div class="panel-body">
+
+            <h2 th:text="${plant.name}"></h2>
+            <p>ID <label th:text="${plant._id}"></label></p>
+            <p>Description <label th:text="${plant.description}"></label></p>
+            <p>Price <label th:text="${plant.price}"></label></p>
+
+
+        </div>
+    </div>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</body>
+</html>

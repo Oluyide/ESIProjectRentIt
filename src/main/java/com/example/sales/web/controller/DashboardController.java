@@ -3,6 +3,8 @@ package com.example.sales.web.controller;
 import com.example.common.application.exceptions.PlantNotFoundException;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.application.service.InventoryService;
+import com.example.inventory.domain.model.PlantInventoryEntry;
+import com.example.inventory.domain.model.PlantInventoryItem;
 import com.example.sales.application.dto.PurchaseOrderDTO;
 import com.example.sales.application.service.SalesService;
 import com.example.sales.domain.model.PurchaseOrder;
@@ -38,12 +40,19 @@ public class DashboardController {
                 query.getRentalPeriod().getStartDate(),
                 query.getRentalPeriod().getEndDate()
         );
-        model.addAttribute("plants", plants
-                );
+        model.addAttribute("plants", plants);
         PurchaseOrderDTO po = new PurchaseOrderDTO();
         po.setRentalPeriod(query.getRentalPeriod());
         model.addAttribute("po", po);
         return "dashboard/catalog/query-result";
+    }
+
+    @GetMapping("/catalog/query/{id}")
+    public String querySpecificPlant(Model model, @PathVariable String id){
+        PlantInventoryEntryDTO entry = inventoryService.findPlant(id);
+        model.addAttribute("plant", entry);
+
+        return "dashboard/catalog/query-specific";
     }
 
     @GetMapping("/catalog/reservationsForm")
@@ -76,5 +85,23 @@ public class DashboardController {
         PurchaseOrderDTO po = salesService.findPurchaseOrder(id);
         model.addAttribute("po", po);
         return "dashboard/orders/show";
+    }
+
+    @PostMapping("/orders/cancel")
+    public String cancelPO(Model model, String id){
+
+        String message = "";
+        try{
+            salesService.closePurchaseOrder(id);
+            message = "Purchase order cancelled successfully";
+        }
+        catch(Exception e){
+            message = e.getMessage();
+        }
+
+
+        model.addAttribute("message", message);
+
+        return "dashboard/orders/cancel";
     }
 }
