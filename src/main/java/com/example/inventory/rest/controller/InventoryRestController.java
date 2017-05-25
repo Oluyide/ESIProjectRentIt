@@ -2,7 +2,9 @@ package com.example.inventory.rest.controller;
 
 import com.example.common.application.exceptions.PlantNotFoundException;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
+import com.example.inventory.application.dto.PlantInventoryItemDTO;
 import com.example.inventory.application.service.InventoryService;
+import com.example.inventory.domain.model.EquipmentCondition;
 import com.example.inventory.domain.model.PlantInventoryItem;
 import com.example.inventory.domain.model.PlantInventoryItemStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,13 @@ public class InventoryRestController {
                             plantName.get(), startDate.get(), endDate.get()));
     }
 
+    @GetMapping("/items")
+    @Secured({"ROLE_ADMIN","ROLE_MAINTENANCE_TL"})
+    public List<PlantInventoryItemDTO> findAllPlantItems() {
+        List<PlantInventoryItemDTO> items = inventoryService.findAllPlantItems();
+        System.out.println("itemsctrl: " + items);
+        return items;
+    }
 
     @GetMapping("/reservations/{startDate}")
     @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
@@ -93,13 +102,13 @@ public class InventoryRestController {
     @PostMapping("/{id}/returned/maintenance")
     @Secured({"ROLE_MAINTENANCE_TL"})
     public PlantInventoryItem scheduleMaintenance(@PathVariable String id) throws Exception{
-        return inventoryService.ScheduleMaintenance(id);
+        return inventoryService.scheduleMaintenance(id);
     }
 
     @PostMapping("/{id}/returned/serviceable")
     @Secured({"ROLE_MAINTENANCE_TL"})
     public void completeMaintenance(@PathVariable String id) throws PlantNotFoundException{
-        inventoryService.CompleteMaintenance(id);
+        inventoryService.completeMaintenance(id);
     }
 
 

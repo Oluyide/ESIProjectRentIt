@@ -4,6 +4,7 @@ import com.example.common.application.exceptions.PlantNotFoundException;
 import com.example.common.domain.model.BusinessPeriod;
 import com.example.common.integration.MailIntegration;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
+import com.example.inventory.application.dto.PlantInventoryItemDTO;
 import com.example.inventory.domain.model.*;
 import com.example.inventory.domain.repository.InventoryRepository;
 import com.example.inventory.domain.repository.PlantInventoryItemRepository;
@@ -30,6 +31,9 @@ public class InventoryService {
 
     @Autowired
     PlantInventoryEntryAssembler plantInventoryEntryAssembler;
+
+    @Autowired
+    PlantInventoryItemAssembler plantInventoryItemAssembler;
 
     @Autowired
     InventoryIdentifierFactory identifierFactory;
@@ -67,6 +71,12 @@ public class InventoryService {
 
     public PlantInventoryEntryDTO findPlant(String id) {
         return plantInventoryEntryAssembler.toResource(inventoryRepository.findOne(id));
+    }
+
+    public List<PlantInventoryItemDTO> findAllPlantItems() {
+        List<PlantInventoryItem> items = plantInventoryItemRepository.findAll();
+        System.out.println("items: " + items);
+        return plantInventoryItemAssembler.toResources(items);
     }
 
     public List<PlantInventoryItem> findPlantItems(String id){
@@ -169,7 +179,7 @@ public class InventoryService {
         return item;*/
     }
 
-    public PlantInventoryItem ScheduleMaintenance (String id) throws Exception
+    public PlantInventoryItem scheduleMaintenance (String id) throws Exception
     {
         PlantInventoryItem item = findPlantItem(id);
         replaceRepairedPlant(item);
@@ -178,7 +188,7 @@ public class InventoryService {
         return item;
     }
 
-    public void CompleteMaintenance (String id) throws PlantNotFoundException
+    public void completeMaintenance (String id) throws PlantNotFoundException
     {
         handleEquipmentConditionChange(id, EquipmentCondition.SERVICEABLE);
     }
