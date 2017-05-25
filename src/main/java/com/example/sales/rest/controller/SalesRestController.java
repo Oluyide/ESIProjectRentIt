@@ -51,8 +51,8 @@ public class SalesRestController {
 
     @PatchMapping("/{id}")
     @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE", "ROLE_EXTERNAL_USER"})
-    public PurchaseOrderDTO updatePurchaseOrder(@PathVariable String id) throws Exception {
-        PurchaseOrderDTO poDTO = salesService.findPurchaseOrder(id);
+    public PurchaseOrderDTO updatePurchaseOrder(@RequestBody PurchaseOrderDTO poDTO) throws Exception {
+        salesService.updatePurchaseOrder(poDTO);
         return poDTO;
     }
 
