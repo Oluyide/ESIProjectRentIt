@@ -135,30 +135,31 @@ public class InventoryService {
     }
 
 
-    public PlantInventoryItem replaceRepairedPlant(PlantInventoryItem item) throws Exception{
+    public void replaceRepairedPlant(PlantInventoryItem item) throws Exception{
         PlantInventoryEntry entry = item.getPlantInfo();
         List<PlantInventoryItem> items = plantInventoryItemRepository.findAllByPlantInfoAndEquipmentCondition(entry, EquipmentCondition.SERVICEABLE);
 
         PlantReservation currentReservation = plantReservationRepository.findPlantReservationByPlant(item);
 
-        if (currentReservation == null)
-            throw new Exception("Plant reservation not found");
+        if (currentReservation != null) {
+            //throw new Exception("Plant reservation not found");
 
-        List<PlantInventoryItem> availableItems = inventoryRepository.findAvailableInventoryItems(
-                entry,
-                currentReservation.getSchedule().getStartDate(),
-                currentReservation.getSchedule().getEndDate()
-        );
+            List<PlantInventoryItem> availableItems = inventoryRepository.findAvailableInventoryItems(
+                    entry,
+                    currentReservation.getSchedule().getStartDate(),
+                    currentReservation.getSchedule().getEndDate()
+            );
 
-        if (availableItems.size() == 0)
-            throw new Exception("There are no available plants");
+            if (availableItems.size() == 0)
+                throw new Exception("There are no available plants");
 
-        PlantInventoryItem newItem = availableItems.get(0);
+            PlantInventoryItem newItem = availableItems.get(0);
 
-        currentReservation.changeReservedPlant(newItem);
-        plantReservationRepository.save(currentReservation);
+            currentReservation.changeReservedPlant(newItem);
+            plantReservationRepository.save(currentReservation);
+        }
 
-        return newItem;
+        //return newItem;
 
         /*for (PlantInventoryItem i: items) {
             if (!i.getId().equalsIgnoreCase(item.getId()) && i.getEquipmentCondition() == EquipmentCondition.SERVICEABLE){
