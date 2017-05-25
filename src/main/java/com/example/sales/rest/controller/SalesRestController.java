@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -51,8 +52,10 @@ public class SalesRestController {
 
     @PatchMapping("/{id}")
     @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE", "ROLE_EXTERNAL_USER"})
-    public PurchaseOrderDTO updatePurchaseOrder(@PathVariable String id, @RequestBody PurchaseOrderDTO poDTO) throws Exception {
-        salesService.updatePurchaseOrder(poDTO);
+    public PurchaseOrderDTO modifyPurchaseOrder(@PathVariable String id,
+                                                @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> startDate,
+                                                @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> endDate) throws Exception {
+        PurchaseOrderDTO poDTO=salesService.modifyPurchaseOrder(id, startDate.get(), endDate.get());
         return poDTO;
     }
 
