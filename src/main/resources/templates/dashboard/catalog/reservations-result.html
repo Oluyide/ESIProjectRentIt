@@ -1,5 +1,5 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
 <title>List all Plants to deploy</title>
 
@@ -8,27 +8,36 @@
 <body>
 
 <div class="container">
-<div class="panel panel-default">
-  <div class="panel-heading">List of Plants to deploy on <span th:text="${startDate}"></span></div>
-  <div class="panel-body">
-
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="table-row" th:each="p : ${plants}">
-                <td th:text="${p.name}"></td>
-                <td th:text="${p.description}"></td>
-                <td th:text="${p.price}"></td>
-            </tr>
-        </tbody>
-    </table>
+    <div sec:authorize="(isAuthenticated()==false)">
+        Login Error. <a href="/login">Click here to go back to login screen</a>
     </div>
+    <div sec:authorize="hasAuthority('ROLE_ADMIN') == false">
+        Role Access error. Only administrators and maintenance staff can access this page. <a href="/login">Click here to sign in as another user.</a>
+    </div>
+    <div sec:authorize="isAuthenticated()">
+        <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+            <div class="panel panel-default">
+                <div class="panel-heading">List of Plants to deploy on <span th:text="${startDate}"></span></div>
+                <div class="panel-body">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row" th:each="p : ${plants}">
+                                <td th:text="${p.name}"></td>
+                                <td th:text="${p.description}"></td>
+                                <td th:text="${p.price}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

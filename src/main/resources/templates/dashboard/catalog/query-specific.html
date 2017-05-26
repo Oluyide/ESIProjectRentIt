@@ -1,5 +1,5 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <title>Plant Information</title>
 
@@ -8,21 +8,31 @@
 <body>
 
 <div class="container" style="padding-top: 20px">
-    <div class="panel panel-default">
-        <div class="panel-heading">Plant Information</div>
-        <div class="panel-body">
+    <div sec:authorize="(isAuthenticated()==false)">
+        Login Error. <a href="/login">Click here to go back to login screen</a>
+    </div>
+    <div sec:authorize="hasAuthority('ROLE_ADMIN') == false">
+        Role Access error. Only administrators and maintenance staff can access this page. <a href="/login">Click here to sign in as another user.</a>
+    </div>
+    <div sec:authorize="isAuthenticated()">
+        <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+            <div class="panel panel-default">
+                <div class="panel-heading">Plant Information</div>
+                <div class="panel-body">
 
-            <h2 th:text="${plant.name}"></h2>
-            <p>ID <label th:text="${plant._id}"></label></p>
-            <p>Description <label th:text="${plant.description}"></label></p>
-            <p>Price <label th:text="${plant.price}"></label></p>
-            <p>
-                <form th:object="${plant}" th:method="get" th:action="@{'/dashboard/catalog/query/plant-items'}">
-                    <input type="hidden" name="id" th:value="${plant._id}"></input>
-                    <button class="btn btn-default btn-xs" type="submit">See all plants items</button>
-                </form>
-            </p>
+                    <h2 th:text="${plant.name}"></h2>
+                    <p>ID <label th:text="${plant._id}"></label></p>
+                    <p>Description <label th:text="${plant.description}"></label></p>
+                    <p>Price <label th:text="${plant.price}"></label></p>
+                    <p>
+                        <form th:object="${plant}" th:method="get" th:action="@{'/dashboard/catalog/query/plant-items'}">
+                            <input type="hidden" name="id" th:value="${plant._id}"></input>
+                            <button class="btn btn-default btn-xs" type="submit">See all plants items</button>
+                        </form>
+                    </p>
 
+                </div>
+            </div>
         </div>
     </div>
 </div>

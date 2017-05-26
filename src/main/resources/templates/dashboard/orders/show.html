@@ -1,5 +1,5 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <title>Purchase Order</title>
 
@@ -8,42 +8,52 @@
 <body>
 
 <div class="container">
-    <div class="panel panel-default">
-        <div class="panel-heading">Purchase Order</div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-sm-2"><b>Plant Name</b></div>
-                <div class="col-sm-8" th:text="${po.plant.name}"></div>
-            </div>
-            <div class="row">
-                <div class="col-sm-2"><b>Start date</b></div>
-                <div class="col-sm-8" th:text="${po.rentalPeriod.startDate}"></div>
-            </div>
-            <div class="row">
-                <div class="col-sm-2"><b>End date</b></div>
-                <div class="col-sm-8" th:text="${po.rentalPeriod.endDate}"></div>
-            </div>
-            <div class="row">
-                <div class="col-sm-2"><b>Total</b></div>
-                <div id="total-cost" class="col-sm-8" th:text="${po.total}"></div>
-            </div>
-            <div class="row">
-                <div class="col-sm-2"><b>Status</b></div>
-                <div class="col-sm-8" th:text="${po.status}"></div>
-            </div>
+    <div sec:authorize="(isAuthenticated()==false)">
+        Login Error. <a href="/login">Click here to go back to login screen</a>
+    </div>
+    <div sec:authorize="hasAuthority('ROLE_ADMIN') == false">
+        Role Access error. Only administrators and maintenance staff can access this page. <a href="/login">Click here to sign in as another user.</a>
+    </div>
+    <div sec:authorize="isAuthenticated()">
+        <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+            <div class="panel panel-default">
+                <div class="panel-heading">Purchase Order</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-2"><b>Plant Name</b></div>
+                        <div class="col-sm-8" th:text="${po.plant.name}"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2"><b>Start date</b></div>
+                        <div class="col-sm-8" th:text="${po.rentalPeriod.startDate}"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2"><b>End date</b></div>
+                        <div class="col-sm-8" th:text="${po.rentalPeriod.endDate}"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2"><b>Total</b></div>
+                        <div id="total-cost" class="col-sm-8" th:text="${po.total}"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2"><b>Status</b></div>
+                        <div class="col-sm-8" th:text="${po.status}"></div>
+                    </div>
 
-            <div class="row">
-                <form style ='float:left; padding:5px; height:0px' th:object="${po._id}" th:method="post" th:action="@{'/dashboard/orders/cancel'}">
-                    <input type="hidden" name="id" th:value="${po._id}"></input>
-                    <button class="btn btn-default btn-xs" type="submit">Cancel PO</button>
-                </form>
+                    <div class="row">
+                        <form style ='float:left; padding:5px; height:0px' th:object="${po._id}" th:method="post" th:action="@{'/dashboard/orders/cancel'}">
+                            <input type="hidden" name="id" th:value="${po._id}"></input>
+                            <button class="btn btn-default btn-xs" type="submit">Cancel PO</button>
+                        </form>
 
-                <form style ='float:left; padding:5px; height:0px' th:object="${po._id}" th:method="get" th:action="@{'/dashboard/orders/modify'}">
-                    <input type="hidden" name="id" th:value="${po._id}"></input>
-                    <button class="btn btn-default btn-xs" type="submit">Modify PO</button>
-                </form>
+                        <form style ='float:left; padding:5px; height:0px' th:object="${po._id}" th:method="get" th:action="@{'/dashboard/orders/modify'}">
+                            <input type="hidden" name="id" th:value="${po._id}"></input>
+                            <button class="btn btn-default btn-xs" type="submit">Modify PO</button>
+                        </form>
+                    </div>
+
+                </div>
             </div>
-
         </div>
     </div>
 </div>

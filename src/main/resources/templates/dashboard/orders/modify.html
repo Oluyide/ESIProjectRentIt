@@ -1,5 +1,5 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <title>Modify</title>
 
@@ -8,38 +8,48 @@
 <body>
 
 <div class="container">
-    <div class="panel panel-default">
-        <div class="panel-heading">Information</div>
-        <div class="panel-body">
+    <div sec:authorize="(isAuthenticated()==false)">
+        Login Error. <a href="/login">Click here to go back to login screen</a>
+    </div>
+    <div sec:authorize="hasAuthority('ROLE_ADMIN') == false">
+        Role Access error. Only administrators and maintenance staff can access this page. <a href="/login">Click here to sign in as another user.</a>
+    </div>
+    <div sec:authorize="isAuthenticated()">
+        <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+            <div class="panel panel-default">
+                <div class="panel-heading">Information</div>
+                <div class="panel-body">
 
-            <p>Old start date <label th:text="${po.rentalPeriod.startDate}"></label></p>
-            <p>Old end date <label th:text="${po.rentalPeriod.endDate}"></label></p>
+                    <p>Old start date <label th:text="${po.rentalPeriod.startDate}"></label></p>
+                    <p>Old end date <label th:text="${po.rentalPeriod.endDate}"></label></p>
 
-            <form class="form-horizontal" th:object="${catalogQuery}" th:method="post" th:action="@{/dashboard/orders/modify}">
+                    <form class="form-horizontal" th:object="${catalogQuery}" th:method="post" th:action="@{/dashboard/orders/modify}">
 
-                <input type="hidden" name="id" th:value="${po._id}"></input>
+                        <input type="hidden" name="id" th:value="${po._id}"></input>
 
-                <div class="form-group">
-                    <label for="rental-start-date" class="col-sm-2 control-label">New start date</label>
-                    <div class="col-sm-10">
-                        <input type="date" class="form-control" id="rental-start-date" th:field="*{rentalPeriod.startDate}"></input>
-                    </div>
+                        <div class="form-group">
+                            <label for="rental-start-date" class="col-sm-2 control-label">New start date</label>
+                            <div class="col-sm-10">
+                                <input type="date" class="form-control" id="rental-start-date" th:field="*{rentalPeriod.startDate}"></input>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="rental-end-date" class="col-sm-2 control-label">New end date</label>
+                            <div class="col-sm-10">
+                                <input type="date" class="form-control" id="rental-end-date" th:field="*{rentalPeriod.endDate}"></input>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button id="submit-button" type="submit" class="btn btn-default">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+
                 </div>
-
-                <div class="form-group">
-                    <label for="rental-end-date" class="col-sm-2 control-label">New end date</label>
-                    <div class="col-sm-10">
-                        <input type="date" class="form-control" id="rental-end-date" th:field="*{rentalPeriod.endDate}"></input>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button id="submit-button" type="submit" class="btn btn-default">Submit</button>
-                    </div>
-                </div>
-            </form>
-
+            </div>
         </div>
     </div>
 </div>
