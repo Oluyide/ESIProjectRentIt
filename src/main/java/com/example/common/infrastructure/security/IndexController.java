@@ -21,7 +21,7 @@ public class IndexController implements org.springframework.boot.autoconfigure.w
     @RequestMapping("/error")
     public String loginError(Model model) {
         model.addAttribute("loginError", true);
-        return "/dashboard/error";
+        return "dashboard/error";
     }
 
     @Override
