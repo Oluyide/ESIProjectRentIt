@@ -89,6 +89,13 @@ public class DashboardController {
         return "redirect:/dashboard/orders/" + purchaseOrderDTO.get_id();
     }
 
+    @GetMapping("/ordersall")
+    public String showAllPOs(Model model) {
+        List<PurchaseOrderDTO> pos = salesService.findAll();
+        model.addAttribute("pos", pos);
+        return "/dashboard/orders/all";
+    }
+
     @GetMapping("/orders/{id}")
     public String showPurchaseOrder(Model model, @PathVariable String id) {
         PurchaseOrderDTO po = salesService.findPurchaseOrder(id);
